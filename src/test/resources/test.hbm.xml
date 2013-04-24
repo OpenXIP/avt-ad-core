@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package = "com.siemens.scr.avt.ad.dicom" schema="AD">
+       <class name = "Patient" table = "PATIENT">
+			<id  name="PK_ID" column = "PATIENT_PK_ID" type = "integer">
+				<generator class = "native" />
+			</id>
+			
+			<property name = "patientID" column = "PATIENT_ID" length = "64"/>
+			
+			<property name = "patientName" column = "PATIENT_NAME" length = "250"/>
+			
+			<property name = "patientSex" column = "PATIENT_SEX" length = "16"/>
+			
+			<property name = "patientBirthDate" column = "PATIENT_BIRTH_DATE" type = "date"/>
+
+			<set name = "studies" inverse = "true" cascade = "save-update">
+				<key column = "PATIENT_PK_ID" />
+				<one-to-many class = "GeneralStudy"/>
+			</set>
+       </class>
+	   
+	   <class name = "GeneralStudy" table = "STUDY">
+			<id  name="PK_ID" column = "STUDY_PK_ID" type = "integer">
+				<generator class = "native" />
+			</id>
+			
+			<property name = "studyInstanceUID" column = "STUDY_INSTANCE_UID" length = "500"/>
+			
+			<property name = "studyDateTime"  column = "STUDY_DATETIME" type = "timestamp"/>
+			
+			
+			<property name = "studyID" column = "STUDY_ID" length = "16"/>
+			
+			<many-to-one name = "patient" column = "PATIENT_PK_ID" class = "Patient"  not-null = "true" />
+			
+			<set name = "series" inverse = "true" cascade = "save-update">
+				<key column = "STUDY_PK_ID" />
+				<one-to-many class = "GeneralSeries"/>
+			</set>
+       </class>
+	   
+	   <class name = "GeneralSeries" table = "GENERAL_SERIES">
+			<id  name="PK_ID" column = "GENERAL_SERIES_PK_ID" type = "integer">
+				<generator class = "native" />
+			</id>
+			
+			<property name = "seriesInstanceUID" column = "SERIES_INSTANCE_UID" length = "64"/>
+			
+			<property name = "protocolName" column = "PROTOCOL_NAME" length = "64"/>
+			
+			<property name = "seriesDescription" column = "SERIES_DESC" length = "64"/>
+			
+			
+			<many-to-one name = "study" column = "STUDY_PK_ID" class = "GeneralStudy"   not-null = "true" />
+			
+			<set name = "images" inverse = "true" cascade = "save-update">
+				<key column = "GENERAL_SERIES_PK_ID" />
+				<one-to-many class = "GeneralImage"/>
+			</set>
+			
+			
+       </class>
+	   
+	   <class name = "GeneralImage" table = "GENERAL_IMAGE">
+			<id  name="PK_ID" column = "IMAGE_PK_ID" type = "integer">
+				<generator class = "native" />
+			</id>
+			
+
+			<property name = "acquisitionNumber" column = "ACQUISITION_NUMBER" type="string" length="16"/>
+			
+			<property name = "acquisitionDateTime" column = "ACQUISITION_DATETIME" type="timestamp"/>
+
+			<property name = "patientOrientation" column = "PATIENT_ORIENTATION" type="com.siemens.scr.avt.ad.hibernate.StringArray2StringType" length = "200" />
+
+			<many-to-one name = "series" column = "GENERAL_SERIES_PK_ID" class = "GeneralSeries"   not-null = "true" />
+			
+			<component name = "SOPCommand" class = "org.dcm4che2.iod.module.general.SOPCommonModule">
+				<property name = "SOPClassUID" length = "64" column = "SOP_CLASS_UID" not-null = "true"/>
+				<property name = "SOPInstanceUID" length = "64" column = "SOP_INSTANCE_UID" not-null = "true"/>
+			</component>
+			
+			<component name = "fileMetaInformation" class = "org.dcm4che2.media.FileMetaInformation">
+				<property name = "transferSyntaxUID" length = "64" column = "TRANSFER_SYNTAX_UID" not-null = "true"/>
+			</component>
+       </class>
+	   
+	   <!-- Ignore for now.
+	     <class name = "GeneralEquipment" table = "GENERAL_EQUIPMENT">
+			<id name="PK_ID" column = "GENERAL_EQUIPMENT_PK_ID" type = "integer">
+				<generator class = "native" />
+			</id>
+			
+			<property name = "manufacturer" column = "MANUFACTURER" length = "64"/>
+			
+			<property name = "institutionName" column = "INSTITUTION_NAME" length = "64"/>
+			
+			<property name = "manufacturerModelName" column = "MANUFACTURE_MODEL_NAME" length = "64"/>
+			
+			<property name = "institutionAddress" column = "INSTITUTION_ADDRESS" length = "1024"/>
+			
+			<property name = "stationName" column = "STATION_NAME" length = "16"/>
+			
+			<property name = "deviceSerialNumber" column = "DEVICE_SERIAL_INTEGER" length = "64"/>
+			
+			
+			
+			
+       </class>
+	   -->
+	   	
+</hibernate-mapping>

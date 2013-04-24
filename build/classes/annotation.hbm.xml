@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package = "com.siemens.scr.avt.ad.annotation" schema="AD">
+       <class name = "ImageAnnotation" table = "IMAGE_ANNOTATION">
+			<id  name = "PK_ID" column = "ANNOTATION_ID" type = "integer" access="field">
+				<generator class = "native" />
+			</id>
+			
+			<property name = "AIM"  column = "AIM_OBJECT" type="com.siemens.scr.avt.ad.hibernate.StringXMLType"/>
+			
+			<component name = "descriptor" class = "ImageAnnotationDescriptor">
+				<property name = "UID" column = "ANNOTATION_UID" length = "64"/>
+				<!--<property name = "seriesInstanceUID" column = "SERIES_INSTANCE_UID" length = "64"/>-->
+				<property name = "AIMVersion" length = "64" column = "AIM_VERSION" />
+				<property name = "comment" length = "64" column = "COMMENT" />
+				<property name = "imageAnnotationType" length = "64" column = "ANNOTATION_TYPE" />
+				<property name = "name" length = "64" column = "NAME" />
+				<property name = "roleInTrial" length = "64" column = "ROLE_IN_TRIAL" />
+				<property name = "authorName" length = "64" column = "AUTHOR_NAME"/>
+				<property name = "groundTruth" type = "boolean" column = "GROUND_TRUTH" />
+				<property name = "dateTime" column = "DATE_TIME" />
+			</component>
+			
+			<set name = "referencedImages" table="REFERENCE_IMAGES" cascade = "delete">
+			    <key column = "ANNOTATION_ID"/>
+			    <many-to-many class = "com.siemens.scr.avt.ad.dicom.GeneralImage" column = "IMAGE_PK_ID" />
+			</set>
+			
+       </class>
+	   
+	   	
+</hibernate-mapping>
