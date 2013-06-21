@@ -17,7 +17,7 @@ AD Core&trade; is implemented in Java, and uses the free distribution of the
 [IBM DB2 Express-C](http://www-01.ibm.com/software/data/db2/express-c/download.html)
 product as its backend database.
 
-The ultimate goal of the project provide an implementation of the AD API.
+The ultimate goal of the project is to provide an implementation of the AD API.
 
 AVT&trade;, including the AVT AD Core&trade; is distributed under the
 [Apache 2.0 License](http://opensource.org/licenses/Apache-2.0).
